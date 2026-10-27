@@ -85,6 +85,44 @@ try:
 except (FileNotFoundError, ET.ParseError) as exc:
     fail(f"Invalid or missing sitemap.xml: {exc}")
 
+
+# Check SEO metadata consistency for every indexable page in the sitemap.
+try:
+    sitemap_root = ET.parse(ROOT / "sitemap.xml").getroot()
+    for loc in sitemap_root.findall(".//{*}loc"):
+        page_url = (loc.text or "").strip()
+        parsed = urlsplit(page_url)
+        rel = parsed.path.lstrip("/") or "index.html"
+        if rel.endswith("/"):
+            rel += "index.html"
+        page_path = ROOT / rel
+        if not page_path.is_file():
+            continue
+        html = page_path.read_text(encoding="utf-8")
+        canonical = re.findall(r'<link\\s+rel="canonical"\\s+href="([^"]+)"', html, re.I)
+        titles = re.findall(r'<title>(.*?)</title>', html, re.I | re.S)
+        descriptions = re.findall(r'<meta\\s+name="description"\\s+content="([^"]*)"', html, re.I)
+        og_titles = re.findall(r'<meta\\s+property="og:title"\\s+content="([^"]*)"', html, re.I)
+        twitter_cards = re.findall(r'<meta\\s+name="twitter:card"\\s+content="([^"]*)"', html, re.I)
+        alternates = dict(re.findall(r'<link\\s+rel="alternate"\\s+hreflang="([^"]+)"\\s+href="([^"]+)"', html, re.I))
+        if canonical != [page_url]:
+            fail(f"Canonical URL must match sitemap and appear once: {rel}")
+        if len(titles) != 1 or not titles[0].strip():
+            fail(f"Page must have exactly one non-empty title: {rel}")
+        if len(descriptions) != 1 or not descriptions[0].strip():
+            fail(f"Page must have exactly one non-empty meta description: {rel}")
+        if len(og_titles) != 1 or len(twitter_cards) != 1 or twitter_cards[0] != "summary_large_image":
+            fail(f"Open Graph/Twitter preview metadata is incomplete or duplicated: {rel}")
+        is_english = parsed.path.startswith("/en/")
+        expected_ar = page_url.replace("/en/", "/") if is_english else page_url
+        expected_en = page_url if is_english else page_url.replace("https://golden-shine-marble.pages.dev/", "https://golden-shine-marble.pages.dev/en/")
+        if alternates.get("ar-EG") != expected_ar or alternates.get("en") != expected_en:
+            fail(f"Arabic/English hreflang alternates do not match page pair: {rel}")
+        if alternates.get("x-default") != expected_ar:
+            fail(f"x-default hreflang should point to Arabic equivalent: {rel}")
+except (FileNotFoundError, ET.ParseError) as exc:
+    fail(f"Could not validate SEO metadata from sitemap: {exc}")
+
 if errors:
     print("FAIL: static website validation found issues:")
     for error in errors:
