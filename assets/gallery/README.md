@@ -1,7 +1,7 @@
 # Finished-work gallery photos
 
-Upload 93 real company-owned or authorized finished-work photos to this directory with these exact names: `work-01.webp` through `work-93.webp`.
+This directory contains 93 real finished-work photos, kept under their original filenames. Both Arabic and English homepages reference the exact filenames in this folder and URL-encode them when loading the images.
 
-Both homepages look for `/assets/gallery/work-XX.webp`. Use photos of the final polished result only. This is not a before-and-after gallery. Until the actual images are uploaded, neutral placeholders appear instead of stock photos.
+Only company-owned or authorized photos of the final polished result should appear here. This is not a before-and-after gallery, and stock photos must not be presented as company work.
 
-Recommended: landscape images optimized for web. Avoid customer-sensitive details unless you have permission to publish them.
+Recommended: optimize images for the web while keeping the visible finish clear. Avoid customer-sensitive details unless you have permission to publish them.
