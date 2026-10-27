@@ -13,7 +13,7 @@ def fail(message):
 required = [
     "index.html", "en/index.html", "commercial-projects.html",
     "en/commercial-projects.html", "service-areas.html", "en/service-areas.html",
-    "robots.txt", "sitemap.xml", "404.html", "assets/gallery/README.md",
+    "robots.txt", "sitemap.xml", "404.html", "README.md",
 ]
 for rel in required:
     if not (ROOT / rel).is_file():
@@ -32,7 +32,7 @@ for label, html in (("Arabic", ar_home), ("English", en_home)):
     image_names = re.findall(r'"([^"]+\.webp)"', gallery_match.group(1)) if gallery_match else []
     if len(image_names) != 93:
         fail(f"{label} homepage must reference exactly 93 finished-work images.")
-    if not ("encodeURIComponent(filename)" in html or "encodeURI('/assets/gallery/'+filename)" in html):
+    if not ("encodeURIComponent(filename)" in html or "encodeURI('/'+filename)" in html):
         fail(f"{label} homepage must build gallery image URLs from the actual filenames.")
     if "unsplash" in html.lower():
         fail(f"{label} homepage must not use stock Unsplash images as company work.")
@@ -54,14 +54,14 @@ for html_path in ROOT.rglob("*.html"):
             continue
         # JavaScript-generated URLs are templates, not literal files on disk.
         if (re.search(r"""['"]\s*\+\s*[A-Za-z_$][\w$]*\s*\+\s*['"]""", raw)
-                or "${" in raw or "encodeURI('/assets/gallery/'" in raw
+                or "${" in raw or "encodeURI('/'" in raw
                 or ("assets/gallery/" in raw and "encodeURIComponent(filename)" in raw)):
             continue
         url = urlsplit(raw)
         target = url.path
         if not target:
             continue
-        if re.fullmatch(r"/assets/gallery/work-\d{2}\.jpg", target):
+        if re.fullmatch(r"/work-\d{2}\.jpg", target):
             continue
         if target.startswith("/"):
             candidate = ROOT / target.lstrip("/")
