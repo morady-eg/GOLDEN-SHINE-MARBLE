@@ -28,8 +28,8 @@ if len(re.findall(r"<li>", projects)) != 64:
 if re.search(r"<b>28</b>", projects):
     fail("Project register should preserve the source numbering gap at item 28.")
 for label, html in (("Arabic", ar_home), ("English", en_home)):
-    gallery_match = re.search(r"const\\s+galleryImages\\s*=\\[(.*?)\\];", html, re.S)
-    image_names = re.findall(r'"([^"]+\\.webp)"', gallery_match.group(1)) if gallery_match else []
+    gallery_match = re.search(r"const\s+galleryImages\s*=\[(.*?)\];", html, re.S)
+    image_names = re.findall(r'"([^"]+\.webp)"', gallery_match.group(1)) if gallery_match else []
     if len(image_names) != 93:
         fail(f"{label} homepage must reference exactly 93 finished-work images.")
     if "encodeURI('/assets/gallery/'+filename)" not in html:
@@ -53,7 +53,8 @@ for html_path in ROOT.rglob("*.html"):
         if raw.startswith(("#", "https://", "http://", "mailto:", "tel:", "javascript:", "data:")):
             continue
         # JavaScript-generated URLs are templates, not literal files on disk.
-        if re.search(r"""['"]\s*\+\s*[A-Za-z_$][\w$]*\s*\+\s*['"]""", raw) or "${" in raw:
+        if (re.search(r"""['"]\s*\+\s*[A-Za-z_$][\w$]*\s*\+\s*['"]""", raw)
+                or "${" in raw or "encodeURI('/assets/gallery/'" in raw):
             continue
         url = urlsplit(raw)
         target = url.path
