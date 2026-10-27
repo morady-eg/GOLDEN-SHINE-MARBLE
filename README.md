@@ -7,7 +7,7 @@ Static bilingual website for Cloudflare Pages.
 - `commercial-projects.html` and `en/commercial-projects.html`: searchable project record.
 - `services/` and `en/services/`: individual service pages.
 - `service-areas.html` and `en/service-areas.html`: coverage pages.
-- `assets/gallery/`: upload real finished-work photos named `work-01.webp` through `work-93.webp`.
+- Root-level image files are the canonical photo library; the gallery renders images from the repository root.
 - `robots.txt` and `sitemap.xml`: crawler guidance and sitemap.
 
 Cloudflare Pages settings: root directory `/`, no build command, output directory `/` (static HTML). Keep `golden-shine-marble.pages.dev` as the domain. No before/after gallery; only actual finished-work images should be used.
