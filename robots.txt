@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://golden-shine-marble.pages.dev/sitemap.xml
