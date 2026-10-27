@@ -99,12 +99,12 @@ try:
         if not page_path.is_file():
             continue
         html = page_path.read_text(encoding="utf-8")
-        canonical = re.findall(r'<link\\s+rel="canonical"\\s+href="([^"]+)"', html, re.I)
+        canonical = re.findall(r'<link\s+rel="canonical"\s+href="([^"]+)"', html, re.I)
         titles = re.findall(r'<title>(.*?)</title>', html, re.I | re.S)
-        descriptions = re.findall(r'<meta\\s+name="description"\\s+content="([^"]*)"', html, re.I)
-        og_titles = re.findall(r'<meta\\s+property="og:title"\\s+content="([^"]*)"', html, re.I)
-        twitter_cards = re.findall(r'<meta\\s+name="twitter:card"\\s+content="([^"]*)"', html, re.I)
-        alternates = dict(re.findall(r'<link\\s+rel="alternate"\\s+hreflang="([^"]+)"\\s+href="([^"]+)"', html, re.I))
+        descriptions = re.findall(r'<meta\s+name="description"\s+content="([^"]*)"', html, re.I)
+        og_titles = re.findall(r'<meta\s+property="og:title"\s+content="([^"]*)"', html, re.I)
+        twitter_cards = re.findall(r'<meta\s+name="twitter:card"\s+content="([^"]*)"', html, re.I)
+        alternates = dict(re.findall(r'<link\s+rel="alternate"\s+hreflang="([^"]+)"\s+href="([^"]+)"', html, re.I))
         if canonical != [page_url]:
             fail(f"Canonical URL must match sitemap and appear once: {rel}")
         if len(titles) != 1 or not titles[0].strip():
