@@ -55,7 +55,7 @@ for html_path in ROOT.rglob("*.html"):
         # JavaScript-generated URLs are templates, not literal files on disk.
         if (re.search(r"""['"]\s*\+\s*[A-Za-z_$][\w$]*\s*\+\s*['"]""", raw)
                 or "${" in raw or "encodeURI('/assets/gallery/'" in raw
-                or ("assets/gallery/" in raw and "encodeURIComponent(filename)" in raw):
+                or ("assets/gallery/" in raw and "encodeURIComponent(filename)" in raw)):
             continue
         url = urlsplit(raw)
         target = url.path
