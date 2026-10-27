@@ -123,6 +123,26 @@ try:
 except (FileNotFoundError, ET.ParseError) as exc:
     fail(f"Could not validate SEO metadata from sitemap: {exc}")
 
+
+# Guard the responsive navigation fixes and verify every referenced gallery file.
+for label, html in (("Arabic", ar_home), ("English", en_home)):
+    if "max-width:900px" not in html or ".links.open{display:flex}" not in html:
+        fail(f"{label} homepage is missing the responsive navigation breakpoint or open state.")
+    if 'id="menubtn"' not in html or 'id="navlinks"' not in html:
+        fail(f"{label} homepage is missing accessible mobile navigation controls.")
+    if "classList.toggle('open')" not in html or "setAttribute('aria-expanded'" not in html:
+        fail(f"{label} homepage mobile navigation behavior is incomplete.")
+    gallery_match = re.search(r"const\\s+galleryImages\\s*=\\[(.*?)\\];", html, re.S)
+    names = re.findall(r'"([^"]+\\.webp)"', gallery_match.group(1)) if gallery_match else []
+    if len(set(names)) != len(names):
+        fail(f"{label} homepage gallery contains duplicate image filenames.")
+    for name in names:
+        if not (ROOT / name).is_file():
+            fail(f"{label} homepage references a missing root gallery image: {name}")
+
+if (ROOT / "assets/gallery").exists():
+    fail("Duplicate assets/gallery directory should remain removed; keep the root-level images only.")
+
 if errors:
     print("FAIL: static website validation found issues:")
     for error in errors:
