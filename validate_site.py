@@ -28,8 +28,8 @@ if len(re.findall(r"<li>", projects)) != 64:
 if re.search(r"<b>28</b>", projects):
     fail("Project register should preserve the source numbering gap at item 28.")
 for label, html in (("Arabic", ar_home), ("English", en_home)):
-    if "i<=69" not in html or "work-" not in html:
-        fail(f"{label} homepage must generate the 69-image finished-work gallery.")
+    if "i<=93" not in html or "work-" not in html:
+        fail(f"{label} homepage must generate the 93-image finished-work gallery.")
     if "unsplash" in html.lower():
         fail(f"{label} homepage must not use stock Unsplash images as company work.")
 
@@ -85,4 +85,4 @@ if errors:
         print(f"- {error}")
     sys.exit(1)
 
-print("PASS: required pages, 64 project entries, 69-image gallery setup, local links, service pages and sitemap validated.")
+print("PASS: required pages, 64 project entries, 93-image gallery setup, local links, service pages and sitemap validated.")
