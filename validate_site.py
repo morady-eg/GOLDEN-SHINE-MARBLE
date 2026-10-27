@@ -132,7 +132,7 @@ for label, html in (("Arabic", ar_home), ("English", en_home)):
         fail(f"{label} homepage is missing accessible mobile navigation controls.")
     if "classList.toggle('open')" not in html or "setAttribute('aria-expanded'" not in html:
         fail(f"{label} homepage mobile navigation behavior is incomplete.")
-    gallery_match = re.search(r"const\s+galleryImages\s*=\\[(.*?)\\];", html, re.S)
+    gallery_match = re.search(r"const\s+galleryImages\s*=\[(.*?)\];", html, re.S)
     names = re.findall(r'"([^"]+\.webp)"', gallery_match.group(1)) if gallery_match else []
     if len(set(names)) != len(names):
         fail(f"{label} homepage gallery contains duplicate image filenames.")
