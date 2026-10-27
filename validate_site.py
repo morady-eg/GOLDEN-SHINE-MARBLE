@@ -48,6 +48,9 @@ for html_path in ROOT.rglob("*.html"):
     for raw in re.findall(r'(?:href|src)="([^"]+)"', source):
         if raw.startswith(("#", "https://", "http://", "mailto:", "tel:", "javascript:", "data:")):
             continue
+        # JavaScript-generated URLs are templates, not literal files on disk.
+        if re.search(r"""['"]\s*\+\s*[A-Za-z_$][\w$]*\s*\+\s*['"]""", raw) or "${" in raw:
+            continue
         url = urlsplit(raw)
         target = url.path
         if not target:
